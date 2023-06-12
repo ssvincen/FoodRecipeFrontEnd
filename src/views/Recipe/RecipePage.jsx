@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Masonry } from '@mui/lab'
 import { CardActions, CardMedia, Card, CardContent } from '@mui/material';
 import { Typography, Container, Button, Box } from '@mui/material';
+import { APIService } from '../../Utility/APIEndpoint';
 
 
 const RecipePage = () => {
@@ -11,15 +12,15 @@ const RecipePage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('https://fakestoreapi.com/products');
-                if (response.ok) {
-                    const data = await response.json();
-                    setData(data);
-                } else {
-                    console.error('Failed to fetch products:', response.status);
-                }
+                APIService.FoodRecipeEndPoint.get(`Recipes/GetRecipe?pageNumber=${pagination.pageIndex}&pageSize=${pagination.pageSize}`)
+                .then(res => {
+                    setData(res.data)
+                })
+                .catch(error => {
+                    console.log("Error")
+                })
             } catch (error) {
-                console.error('Error fetching products:', error);
+                console.error('Error fetching Food Recipe:', error);
             }
         };
 
@@ -40,16 +41,11 @@ const RecipePage = () => {
                                     title="green iguana" />
                                 <CardContent>
                                     <Typography gutterBottom variant="h5" component="div">
-                                        Lizard
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Lizards are a widespread group of squamate reptiles, with over 6,000
-                                        species, ranging across all continents except Antarctica
+                                        {item.title}
                                     </Typography>
                                 </CardContent>
                                 <CardActions>
-                                    <Button size="small">Share</Button>
-                                    <Button size="small">Learn More</Button>
+                                    <Button size="small">View</Button>
                                 </CardActions>
                             </Card>
                         </div>
